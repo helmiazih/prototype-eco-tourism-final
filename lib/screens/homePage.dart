@@ -1,14 +1,8 @@
-
-
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flare_splash_screen/flare_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:prototype/Adminscreens/loginfind2.dart';
 
 import 'loginfind.dart';
-
-
-
 
 class MyApp extends StatelessWidget {
   @override
@@ -25,7 +19,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 
 class MyHomePage extends StatelessWidget {
   @override
@@ -44,7 +37,6 @@ class _ImageCarouselState extends State<ImageCarousel>
     with SingleTickerProviderStateMixin {
   Animation<double> animation;
   AnimationController controller;
-  
 
   initState() {
     super.initState();
@@ -111,23 +103,23 @@ class _ImageCarouselState extends State<ImageCarousel>
                 },
               ),
             ),
-            SizedBox(
-              width: 300,
-              child: RaisedButton(
-                elevation: 5.0,
-                color: Colors.white,
-                child: new Text(
-                  "Add Place",
-                  style: new TextStyle(fontSize: 20.0, color: Colors.black),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen2()),
-                  );
-                },
-              ),
-            ),
+            // SizedBox(
+            //   width: 300,
+            //   child: RaisedButton(
+            //     elevation: 5.0,
+            //     color: Colors.white,
+            //     child: new Text(
+            //       "Add Place",
+            //       style: new TextStyle(fontSize: 20.0, color: Colors.black),
+            //     ),
+            //     onPressed: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => LoginScreen2()),
+            //       );
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),

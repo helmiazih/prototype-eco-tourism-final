@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:prototype/models/mock_data.dart';
 import '../models/userMockData.dart';
 
-import 'package:prototype/screens/todo_screen.dart';
+import './places.dart';
 
 class FlutterSpinkit extends StatefulWidget {
   @override
@@ -16,9 +15,9 @@ class _FlutterSpinkitState extends State<FlutterSpinkit> {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
       Navigator.pushAndRemoveUntil(
-          context, MaterialPageRoute(builder: (context) => TodoListScreen(mockData,userMockData)),
-          ModalRoute.withName('/')
-          );
+          context,
+          MaterialPageRoute(builder: (context) => PlaceListScreen()),
+          ModalRoute.withName('/'));
     });
   }
 
