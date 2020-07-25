@@ -1,5 +1,8 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:prototype/screens/loginfind.dart';
 import '../models/places.dart';
 import '../services/places_services.dart';
 import 'package:prototype/screens/detail_screen.dart';
@@ -8,6 +11,10 @@ import './AddPlace.dart';
 import './AccountSetting.dart';
 
 class PlaceListScreen extends StatefulWidget {
+  PlaceListScreen({this.user, this.googleSignIn});
+  final FirebaseUser user;
+  final GoogleSignIn googleSignIn;
+
   @override
   _PlaceListScreenState createState() => _PlaceListScreenState();
 }
@@ -15,6 +22,30 @@ class PlaceListScreen extends StatefulWidget {
 Future<List<Place>> placeFuture;
 
 class _PlaceListScreenState extends State<PlaceListScreen> {
+  _signOut(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Sign Out?'),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    widget.googleSignIn.signOut();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                  },
+                  child: Text('Yes')),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('No'))
+            ],
+          );
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -37,18 +68,46 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               DrawerHeader(
-                child: UserAccountsDrawerHeader(
-                    currentAccountPicture: CircleAvatar(
-                      child: Image.network(
-                          'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1400&q=60'),
-                    ),
-                    accountName: Text('Helmi Azih'),
-                    accountEmail: Text('Hellow@gmail.com')),
-                decoration: BoxDecoration(
+                child: Container(
                   color: Colors.blue,
+                  child: Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: new Column(
+                      children: <Widget>[
+                        Container(
+                            width: 60.0,
+                            height: 60.0,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                image: DecorationImage(
+                                    image:
+                                        new NetworkImage(widget.user.photoUrl),
+                                    fit: BoxFit.cover),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(75.0)),
+                                boxShadow: [
+                                  BoxShadow(
+                                      blurRadius: 7.0, color: Colors.black)
+                                ])),
+                        Flexible(
+                          child: Text(
+                            widget.user.displayName,
+                            style: new TextStyle(
+                              fontSize: 18.0,
+                              color: Colors.white,
+                            ),
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
               ListTile(
+                leading: Icon(Icons.favorite),
                 title: Text('Favourite'),
                 onTap: () {
                   Navigator.push(
@@ -56,6 +115,7 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                 },
               ),
               ListTile(
+                leading: Icon(Icons.add),
                 title: Text('Add New Place'),
                 onTap: () {
                   Navigator.push(
@@ -63,10 +123,18 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                 },
               ),
               ListTile(
+                leading: Icon(Icons.settings),
                 title: Text('Settings'),
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (c) => AccountSetting()));
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.exit_to_app),
+                title: Text('Sign Out'),
+                onTap: () {
+                  _signOut(context);
                 },
               ),
             ],
@@ -121,27 +189,36 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                place[index].place.toString(),
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18.0),
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text(
-                                                  place[index].state.toString(),
+                                          Flexible(
+                                            child: new Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  place[index].place.toString(),
                                                   style: TextStyle(
-                                                      color: Colors.white))
-                                            ],
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18.0),
+                                                  maxLines: 1,
+                                                  softWrap: false,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                    place[index]
+                                                        .state
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.white))
+                                              ],
+                                            ),
                                           ),
                                           GestureDetector(
                                             onTap: () {
@@ -151,6 +228,13 @@ class _PlaceListScreenState extends State<PlaceListScreen> {
 
                                               placeFuture = PlaceDataService()
                                                   .getAllPlaces();
+                                              SnackBar snackBar = SnackBar(
+                                                content: Text(
+                                                    "Add this place into your favourite"),
+                                                backgroundColor: Colors.green,
+                                              );
+                                              Scaffold.of(context)
+                                                  .showSnackBar(snackBar);
                                             },
                                             child: Icon(
                                                 place[index].favorite

@@ -58,21 +58,21 @@ class _ImageCarouselState extends State<ImageCarousel>
     Widget carousel = new Carousel(
       boxFit: BoxFit.cover,
       images: [
-        new AssetImage("img/c1.jpg"),
-        new AssetImage("img/c2.png"),
-        new AssetImage("img/c3.jpg"),
+        new AssetImage("img/malaysia-best-beaches-mersing.jpg"),
+        new AssetImage("img/Kuching-Food-Festival-1.jpg"),
+        new AssetImage("img/mount-kinabalu.jpg"),
       ],
       animationCurve: Curves.fastOutSlowIn,
       animationDuration: Duration(seconds: 1),
     );
 
     return new Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.white,
       body: new Center(
         child: Column(
           children: <Widget>[
             new Container(
-              padding: const EdgeInsets.all(40.0),
+              padding: EdgeInsets.fromLTRB(40.0, 60.0, 40.0, 40.0),
               height: screenHeight / 2,
               child: new ClipRRect(
                 borderRadius: BorderRadius.circular(30.0),
@@ -90,7 +90,7 @@ class _ImageCarouselState extends State<ImageCarousel>
               width: 300,
               child: RaisedButton(
                 elevation: 5.0,
-                color: Colors.white,
+                color: Colors.lightBlue,
                 child: new Text(
                   "Find Place",
                   style: new TextStyle(fontSize: 20.0, color: Colors.black),

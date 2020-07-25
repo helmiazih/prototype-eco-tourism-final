@@ -34,7 +34,7 @@ class _AddPlaceState extends State<AddPlace> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new Scaffold(
         appBar: AppBar(
           title: Text(
             'Add New Place',
@@ -73,7 +73,16 @@ class _AddPlaceState extends State<AddPlace> {
                 SizedBox(height: 20),
                 RaisedButton(
                   color: Colors.blueAccent,
-                  onPressed: addPlace,
+                  onPressed:(){ 
+                    
+                    addPlace();
+                    SnackBar snackBar = SnackBar(
+                                                content: Text(
+                                                    "Add this place into your favourite"),
+                                                backgroundColor: Colors.green,
+                                              );
+                                              Scaffold.of(context)
+                                                  .showSnackBar(snackBar);},
                   child: Text(
                     'Add',
                     style: TextStyle(color: Colors.white),

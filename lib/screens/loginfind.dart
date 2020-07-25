@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:prototype/models/constant.dart';
 
@@ -11,6 +13,28 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final FirebaseAuth firebaseauth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = new GoogleSignIn();
+
+  Future<FirebaseUser> _signIn() async{
+    GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+
+final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      final FirebaseUser firebaseUser = (await firebaseauth.signInWithCredential(credential)).user;
+   
+
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (BuildContext context)=> new FlutterSpinkit(user: firebaseUser,googleSignIn: googleSignIn)
+      )
+    );
+  }
+
   bool _rememberMe = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -233,12 +257,12 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          _buildSocialBtn(
-            () => print('Login with Google'),
-            AssetImage(
-              'img/d.png',
-            ),
-          ),
+        
+          new InkWell(
+                  onTap: () {
+                    _signIn();
+                  },
+                  child: new Image.asset("img/d.png")),
         ],
       ),
     );
@@ -294,7 +318,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
                     horizontal: 40.0,
-                    vertical: 80.0,
+                    vertical: 40.0,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -302,16 +326,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       new Text(
                         "Eco-Tourism",
                         style: new TextStyle(
-                          fontSize: 50.0,
+                          fontSize: 40.0,
                           fontFamily: 'El Messiri',
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 30.0),
+                      SizedBox(height: 20.0),
                       _buildEmailTF(),
                       SizedBox(
-                        height: 30.0,
+                        height: 20.0,
                       ),
                       _buildPasswordTF(),
                       _buildForgotPasswordBtn(),
