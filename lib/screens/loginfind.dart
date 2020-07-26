@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final GoogleSignIn googleSignIn = new GoogleSignIn();
 
   Future<FirebaseUser> _signIn() async{
+    
     GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
